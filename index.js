@@ -1,6 +1,11 @@
 const puppeteer = require("puppeteer");
 const cheerio = require("cheerio");
 
+const ORIENTATION = {
+  DOWN: 'down',
+  ACROSS: 'across'
+};
+
 (async () => {
   const url = getUrl();
   if (url == null) {
@@ -38,22 +43,22 @@ const cheerio = require("cheerio");
     if (child.children != null && child.children.length === 3) {
       const orientation = ids[child.attribs.id];
 
-      if (orientation["down"] != null) {
+      if (orientation[ORIENTATION.DOWN] != null) {
         // Highligting the current word.
-        await highlightWord(page, child.attribs.id, "down");
+        await highlightWord(page, child.attribs.id, ORIENTATION.DOWN);
 
         // Inserting the word.
-        await page.keyboard.type(data[orientation["down"]].join(""), {
+        await page.keyboard.type(data[orientation[ORIENTATION.DOWN]].join(""), {
           delay: 0,
         });
       }
 
-      if (orientation["across"] != null) {
+      if (orientation[ORIENTATION.ACROSS] != null) {
         // Highligting the current word.
-        await highlightWord(page, child.attribs.id, "across");
+        await highlightWord(page, child.attribs.id, ORIENTATION.ACROSS);
 
         // Inserting the word.
-        await page.keyboard.type(data[orientation["across"]].join(""), {
+        await page.keyboard.type(data[orientation[ORIENTATION.ACROSS]].join(""), {
           delay: 0,
         });
       }
@@ -96,7 +101,7 @@ async function highlightWord(page, id, orientation) {
   // Referencing the next box for the current word
   // depending on the orientation of the word.
   const next =
-    orientation === "down"
+    orientation === ORIENTATION.DOWN
       ? $(`#cx-${parseInt(coords[0]) + 1}-${coords[1]}`)
       : $(`#cx-${coords[0]}-${parseInt(coords[1]) + 1}`);
 
@@ -124,12 +129,12 @@ function prepareSolutionData(grid) {
     for (let j = 0; j < grid[i].length; j++) {
       const cell = grid[i][j];
       if (cell != null) {
-        if (cell["down"] != null) {
-          mapData(data, ids, `cx-${i}-${j}`, cell, 'down');
+        if (cell[ORIENTATION.DOWN] != null) {
+          mapData(data, ids, `cx-${i}-${j}`, cell, ORIENTATION.DOWN);
         }
 
-        if (cell["across"] != null) {
-          mapData(data, ids, `cx-${i}-${j}`, cell, 'across');
+        if (cell[ORIENTATION.ACROSS] != null) {
+          mapData(data, ids, `cx-${i}-${j}`, cell, ORIENTATION.ACROSS);
         }
       }
     }
