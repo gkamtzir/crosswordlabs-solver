@@ -9,7 +9,7 @@
   "author": "George Kamtziridis",
   "license": "MIT",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "puppeteer": "^2.1.1"
+    "cheerio": "^1.0.0-rc.12",
+    "puppeteer": "^18.2.1"
   }
 }
